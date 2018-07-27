@@ -17,9 +17,9 @@
   <h1>Rock-Paper-Scissors</h1>
 <div>
   <button id='newgame'>New Game</button>
-  <button id='rock' class="play hide" data-type='0'>Rock</button>
-  <button id='paper' class="play hide" data-type='1'>Paper</button>
-  <button id='scissors' class="play hide" data-type='2'>Scissors</button>
+  <button id='rock' class="play hide" data-type='0' data-modal='modal-won'>Rock</button>
+  <button id='paper' class="play hide" data-type='1' data-modal='modal-won'>Paper</button>
+  <button id='scissors' class="play hide" data-type='2' data-modal='modal-won'>Scissors</button>
 </div>
 <div class='container hide'>
   <div>
@@ -32,6 +32,42 @@
     <div id='score'></div>
   </div>
 </div>
+<div class="overlay" id="modal-overlay">
+	<div class="modal" id="modal-won">
+		<a href="#" class="close">x</a>
+		<header>Congratulations!</header>
+		<div class="content">
+      <p>You've won the entire game!</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Round</th>
+            <th>Player</th>
+            <th>AI</th>
+            <th>Result</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody id="tbData">
+          
+        </tbody>
+      </table>
+		</div>
+	</div>
+	<div class="modal" id="modal-score">
+		<a href="#" class="close">x</a>
+		<header>Modal two</header>
+		<div class="content">
+			<p>Dolor sit amet!</p>
+		</div>
+	</div>
+	<div class="modal" id="modal-three">
+		<a href="#" class="close">x</a>
+		<header>Modal three</header>
+		<div class="content">
+			<p>Dolor sit amet!</p>
+		</div>
+	</div>
   
   
 

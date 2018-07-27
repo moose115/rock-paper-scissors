@@ -1,14 +1,38 @@
 "use strict";
 
-var rock = 0;
-var paper = 1;
-var scissors = 2; //move type enum
+const rock = 0;
+const paper = 1;
+const scissors = 2; //move type enum
 
-var playerScore = 0;
-var aiScore = 0;
-var aiMove;
-var move;
-var gameState = false; //global scope variables
+var params = {
+  playerScore: 0,
+  aiScore: 0,
+  aiMove: undefined,
+  move: undefined,
+  gameState: false
+}
+
+var progress = {
+  tbRound: 0,
+  tbPlayerMove: null,
+  tbAiMove: null,
+  tbResult: null,
+  tbScore: null
+}
+
+
+function writeTable() {
+  var tbData = document.getElementById('tbData');
+  var row = document.createElement('tr');
+ 
+  for (var element in progress) {
+    var data = document.createElement('td');
+    var dataNode = document.createTextNode(progress[element]);
+    data.appendChild(dataNode);
+    row.appendChild(data);
+    tbData.appendChild(row);
+  };
+}
 
 var winsLeft = 0;
 
@@ -31,13 +55,19 @@ function resultWrite(state, plSign, aiSign) {
       aiSign +
       "<br><br>"
   );
+  progress.tbResult = state;
+  progress.tbPlayerMove = plSign;
+  progress.tbAiMove = aiSign;
+  progress.tbRound++;
+  progress.tbScore = params.playerScore + '-' + params.aiScore;
+  writeTable();
   counter();
 }
 
 function scoreWrite() {
   var score = document.getElementById("score");
   score.innerHTML = "";
-  score.innerHTML = "Player: " + playerScore + "<br>Computer: " + aiScore;
+  score.innerHTML = "Player: " + params.playerScore + "<br>Computer: " + params.aiScore;
 }
 
 function draw() {
@@ -47,39 +77,45 @@ function draw() {
 
 var playerMove = function(move) {
   //computer moves
-  var aiMove = pickRandom();
+  params.aiMove = pickRandom();
 
-  if (move == aiMove) {
+  if (move == params.aiMove) {
     //draw condition
+    progress.tbResult = 'DRAW';
+    progress.tbPlayerMove = (move === 0 ? 'ROCK' : (move === 1 ? 'PAPER' : 'SCISSORS'));
+    progress.tbAiMove = (move === 0 ? 'ROCK' : (move === 1 ? 'PAPER' : 'SCISSORS'));
+    progress.tbRound++;
+    progress.tbScore = params.playerScore + '-' + params.aiScore;
+    writeTable();
     return draw();
   }
-  if (move === 0 && aiMove === 1) {
+  if (move === 0 && params.aiMove === 1) {
     //lose conditions
-    aiScore++;
+    params.aiScore++;
     return resultWrite("LOST", "ROCK", "PAPER");
   }
-  if (move === 1 && aiMove === 2) {
-    aiScore++;
+  if (move === 1 && params.aiMove === 2) {
+    params.aiScore++;
     return resultWrite("LOST", "PAPER", "SCISSORS");
   }
-  if (move === 2 && aiMove === 0) {
-    aiScore++;
+  if (move === 2 && params.aiMove === 0) {
+    params.aiScore++;
     return resultWrite("LOST", "SCISSORS", "ROCK");
   }
 
-  if (move === 1 && aiMove === 0) {
+  if (move === 1 && params.aiMove === 0) {
     //win conditions
-    playerScore++;
+    params.playerScore++;
     winsLeft--;
     return resultWrite("WON", "PAPER", "ROCK");
   }
-  if (move === 2 && aiMove === 1) {
-    playerScore++;
+  if (move === 2 && params.aiMove === 1) {
+    params.playerScore++;
     winsLeft--;
     return resultWrite("WON", "SCISSORS", "PAPER");
   }
-  if (move === 0 && aiMove === 2) {
-    playerScore++;
+  if (move === 0 && params.aiMove === 2) {
+    params.playerScore++;
     winsLeft--;
     return resultWrite("WON", "ROCK", "SCISSORS");
   }
@@ -127,33 +163,35 @@ function roundNumber() {
 }
 
 function counter() {
-  if (!gameState) {
+  if (!params.gameState) {
     winsLeft = parseInt(roundNumber());
   }
   roundsLeft.innerHTML = "Wins left: " + winsLeft;
   if (winsLeft === 0) {
-    alert("You won entire game!");
-    // removeListener();
     buttons.forEach(function(element, index) {
       element.classList.add("hide");
     });
     newGame.classList.remove("hide");
     container.classList.add("hide");
+    showModal('modal-won');
   }
 }
 
 newGame.addEventListener("click", function() {
-  playerScore = 0;
-  aiScore = 0;
-  gameState = false;
+  params.playerScore = 0;
+  params.aiScore = 0;
+  params.gameState = false;
+  var clearTable = document.getElementById('tbData');
+  progress.tbRound = 0;
+  clearTable.innerHTML = '';
   counter();
   output.innerHTML = "";
-  gameState = true;
+  params.gameState = true;
   hasStarted();
 });
 
 function hasStarted() {
-  if (gameState === false) {
+  if (params.gameState === false) {
     output.innerHTML = "Start game";
     return false;
   }
@@ -161,3 +199,33 @@ function hasStarted() {
 }
 
 hasStarted();
+
+var showModal = function(event){
+  // event.preventDefault();
+  document.querySelector('#modal-overlay').classList.add('show');
+  var modals = document.querySelectorAll('.modal');
+  modals.forEach(function(element, index) {
+    element.classList.remove('show');
+  });
+  document.getElementById(event).classList.add('show');
+};
+
+var hideModal = function(event){
+  // event.preventDefault();
+  document.querySelector('#modal-overlay').classList.remove('show');
+};
+
+var closeButtons = document.querySelectorAll('.modal .close');
+
+for(var i = 0; i < closeButtons.length; i++){
+  closeButtons[i].addEventListener('click', hideModal);
+}
+document.querySelector('#modal-overlay').addEventListener('click', hideModal);
+
+var modals = document.querySelectorAll('.modal');
+	
+	for(var i = 0; i < modals.length; i++){
+		modals[i].addEventListener('click', function(event){
+			event.stopPropagation();
+		});
+	}

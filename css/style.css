@@ -1,29 +1,25 @@
-* {
-  text-align: center;
-  font-family: sans-serif;
-}
+* { text-align: center; font-family: sans-serif; }
 
-button {
-  background: pink;
-  border: 0;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-button:active {
-  background: violet;
-}
+button { background: pink; border: 0; padding: 10px 20px; margin: 5px; border-radius: 5px; cursor: pointer; }
 
-.container {
-  display: flex;
-  margin: 0 auto;
-  max-width: 700px;
-}
-.container > div {
-  width: 50%;
-}
+button:active { background: violet; }
 
-.hide {
-  visibility: hidden;
-}
+.container { display: -ms-flexbox; display: flex; margin: 0 auto; max-width: 700px; }
+
+.container > div { width: 50%; }
+
+.hide { visibility: hidden; }
+
+.modal { display: none; background: #fff; width: auto; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0); }
+
+.modal.show { display: block; }
+
+.modal .close { position: absolute; right: 0; top: 0; padding: 5px; color: #000; text-decoration: none; }
+
+.modal header { font-size: 20px; line-height: 30px; min-height: 30px; font-weight: bold; padding: 0 20px; }
+
+.modal .content { min-height: 30px; padding: 5px 30px; }
+
+.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); }
+
+.overlay.show { display: block; }
